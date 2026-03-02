@@ -5,11 +5,15 @@ const STATUS_OPTIONS = ['todo', 'in_progress', 'review', 'done'];
 const PRIORITY_OPTIONS = ['low', 'medium', 'high', 'urgent'];
 
 export default function TaskForm({ initial = {}, projectId, onSave, onCancel }) {
-  const [form, setForm] = useState({
-    title: '', description: '', status: 'todo', priority: 'medium',
-    assignee_id: '', due_date: '', estimated_hours: '', tags: [], project_id: projectId || '',
-    ...initial,
-    due_date: initial.due_date ? new Date(initial.due_date * 1000).toISOString().split('T')[0] : '',
+  const [form, setForm] = useState(() => {
+    const base = {
+      title: '', description: '', status: 'todo', priority: 'medium',
+      assignee_id: '', due_date: '', estimated_hours: '', tags: [], project_id: projectId || '',
+      ...initial,
+    };
+    // Convert unix timestamp to YYYY-MM-DD string for the date input
+    base.due_date = initial.due_date ? new Date(initial.due_date * 1000).toISOString().split('T')[0] : '';
+    return base;
   });
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);

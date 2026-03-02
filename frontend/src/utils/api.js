@@ -16,7 +16,11 @@ api.interceptors.response.use(
   err => {
     if (err.response?.status === 401) {
       localStorage.removeItem('token');
-      window.location.href = '/login';
+      // Dispatch a custom event instead of hard-navigating with window.location.href.
+      // Hard navigation causes a full page reload which can cancel in-flight requests
+      // (including the login POST itself), producing a misleading 'An error occurred' error.
+      // AuthContext listens to this event and triggers a clean SPA logout + redirect.
+      window.dispatchEvent(new Event('auth:unauthorized'));
     }
     return Promise.reject(err.response?.data?.error || 'An error occurred');
   }

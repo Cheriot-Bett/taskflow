@@ -16,6 +16,19 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  // Listen for 401 responses from api.js and perform a clean SPA logout.
+  // This replaces the hard window.location.href redirect that was causing full page
+  // reloads and cancelling in-flight requests (producing 'An error occurred' on login).
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      localStorage.removeItem('token');
+      setUser(null);
+      setLoading(false);
+    };
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+  }, []);
+
   const login = async (email, password) => {
     const data = await api.post('/auth/login', { email, password });
     localStorage.setItem('token', data.token);
