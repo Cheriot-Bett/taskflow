@@ -11,6 +11,7 @@ import Tasks from './pages/Tasks';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import Notifications from './pages/Notifications';
+import BirthdayPage from './pages/Birthday';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -38,6 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/projects" element={<ProtectedRoute><Projects /></ProtectedRoute>} />
           <Route path="/projects/:id" element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="/birthday" element={<BirthdayPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
